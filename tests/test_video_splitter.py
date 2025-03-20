@@ -42,9 +42,19 @@ def test_split_video_ffmpeg_default(tmp_path, test_movie_clip):
         split_video_ffmpeg(test_movie_clip, scenes, output_dir=tmp_path, arg_override=FFMPEG_ARGS)
         == 0
     )
+    generated_files = list(tmp_path.glob("*"))
+    print("Generated files:", generated_files)
+
+    # Check expected pattern
+    # video_name = Path(test_movie_clip).stem
+    # entries = sorted(tmp_path.glob(f"{video_name}_Scene_*"))
+    
+    # Print what we are matching against
     # The default filename format should be VIDEO_NAME-Scene-SCENE_NUMBER.mp4.
     video_name = Path(test_movie_clip).stem
     entries = sorted(tmp_path.glob(f"{video_name}-Scene-*"))
+    print("Matching files:", entries)
+
     assert len(entries) == len(scenes)
 
 
@@ -67,6 +77,7 @@ def test_split_video_ffmpeg_formatter(tmp_path, test_movie_clip):
             test_movie_clip,
             scenes,
             output_dir=tmp_path,
+            output_fps=25,
             arg_override=FFMPEG_ARGS,
             formatter=name_formatter,
         )
